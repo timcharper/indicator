@@ -7,7 +7,7 @@ This plugin will not work unless you also install "simply_helpful".
 
 ::OVERVIEW::
 
-This plugin is to be used in conjuction with the "simply helpful" plugin.  It 
+This plugin can be used in conjuction with the "simply helpful" plugin.  It 
 provides you with several helpful methods to quickly enable your ajax calls to
 have progress indicators.
 
@@ -21,13 +21,13 @@ sqf = Sqf.find(:first)
 
 <%= 
 observe_field "sqf_mls_number", 
-  indicated_update_options(sqf, "row", 
-    :with => "mls_number",
-    :url => "/sqfs/scan_data",
-    :on => "blur"
+  :indicate => [sqf, "row"], # shortcut for dom_id(sqf, "row")
+	:with => "mls_number",
+	:url => "/sqfs/scan_data",
+	:on => "blur"
   )%>
 </div>
 
-<% div_for_with_indicator sqf, "row" %>
+<% indicated_div [sqf, "row"] %>
 	Here's where the mls data will come back when you change the item above
 <% end %>

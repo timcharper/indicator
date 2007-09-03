@@ -1,15 +1,18 @@
 class Indicator
   module InstanceMethods
+    def to_dom_id(identifier)
+      Array===identifier ? dom_id(identifier[0], identifier[1]) : identifier
+    end
     
     def indicator_id(identifier)
-      "#{identifier}_indicator"
+      "#{to_dom_id(identifier)}_indicator"
     end
   
     def indicator(identifier)
       image_tag "indicator.gif", :id => indicator_id(identifier), :style => "display:none"
     end  
     
-    # returns the options for an ajax call to hide/show indicator and div element.  Use in conjunction with div_for_with_indicator for best results
+    # returns the options for an ajax call to hide/show indicator and div element.  Use in conjunction with indicated_div for best results
     # Example
     # 
     # 
@@ -28,14 +31,17 @@ class Indicator
     end
     
     def indicate_loading(identifier)
+      identifier = to_dom_id(identifier)
       "#{show_indicator(identifier)} Element.hide( '#{identifier}' );"
     end
     
     def indicate_complete(identifier)
+      identifier = to_dom_id(identifier)
       "#{hide_indicator(identifier)} Element.show( '#{identifier}' );"
     end
     
     def indicated_tag(tag, identifier, *args, &block)
+      identifier = to_dom_id(identifier)
       content = args.first.is_a?(Hash) ? "" : args.shift
       options = args.first.is_a?(Hash) ? args.shift : {}
 
@@ -66,6 +72,7 @@ module ActionView::Helpers::PrototypeHelper
     identifier = indicate || indicate_and_update
     
     if identifier
+      identifier = to_dom_id(identifier)
       options[:update] = identifier if indicate_and_update
       for op in [:loading, :complete]
         options[op] = send("indicate_#{op}", identifier) + (options[op] ? (";" + options[op].to_s) : "")
