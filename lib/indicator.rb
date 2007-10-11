@@ -8,8 +8,8 @@ class Indicator
       "#{to_dom_id(identifier)}_indicator"
     end
   
-    def indicator(identifier)
-      image_tag "indicator.gif", :id => indicator_id(identifier), :style => "display:none"
+    def indicator(identifier, options = {})
+      image_tag "indicator.gif", options.merge(:id => indicator_id(identifier), :style => "display:none")
     end  
     
     # returns the options for an ajax call to hide/show indicator and div element.  Use in conjunction with indicated_div for best results
@@ -22,22 +22,22 @@ class Indicator
     
     alias :indicated :indicated_update
       
-    def show_indicator(identifier)
+    def indicator_loading(identifier)
       "$('#{indicator_id(identifier)}').show();"
     end
     
-    def hide_indicator(identifier)
+    def indicator_complete(identifier)
       "$('#{indicator_id(identifier)}').hide();"
     end
     
     def indicate_loading(identifier)
       identifier = to_dom_id(identifier)
-      "#{show_indicator(identifier)} Element.hide( '#{identifier}' );"
+      "#{indicator_loading(identifier)} Element.hide( '#{identifier}' );"
     end
     
     def indicate_complete(identifier)
       identifier = to_dom_id(identifier)
-      "#{hide_indicator(identifier)} Element.show( '#{identifier}' );"
+      "#{indicator_complete(identifier)} Element.show( '#{identifier}' );"
     end
     
     def indicated_tag(tag, identifier, *args, &block)
@@ -68,14 +68,21 @@ end
 
 module ActionView::Helpers::PrototypeHelper
   def remote_function_with_indicator(options)
-    indicate, indicate_and_update = options.delete(:indicate), options.delete(:indicate_and_update)
-    identifier = indicate || indicate_and_update
+    indicate, indicate_and_update, indicator = options.delete(:indicate), options.delete(:indicate_and_update), options.delete(:indicator)
+    identifier = indicate || indicate_and_update || indicator
     
     if identifier
       identifier = to_dom_id(identifier)
       options[:update] = identifier if indicate_and_update
-      for op in [:loading, :complete]
-        options[op] = send("indicate_#{op}", identifier) + (options[op] ? (";" + options[op].to_s) : "")
+      
+      if indicator
+        for op in [:loading, :complete]
+          options[op] = send("indicator_#{op}", identifier) + (options[op] ? (";" + options[op].to_s) : "")
+        end
+      else
+        for op in [:loading, :complete]
+          options[op] = send("indicate_#{op}", identifier) + (options[op] ? (";" + options[op].to_s) : "")
+        end
       end
     end
     
