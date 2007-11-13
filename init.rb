@@ -1,4 +1,4 @@
-load "indicator.rb"
+require "indicator.rb"
 
 ActionView::Base.send(:include, Indicator::InstanceMethods)
 # install files
