@@ -1,0 +1,31 @@
+h1. Progress Indicator Helpers v0.1
+
+By Tim Harper (tim c harper at g mail dot com)
+
+h2. OVERVIEW
+
+This plugin provides you with several helpful methods to quickly enable your ajax calls to have progress indicators.
+
+h2. USAGE
+
+<pre>
+  <%
+  sqf = Sqf.find(:first)
+  %>
+  
+  <div>
+  <label>MLS #</label><%= text_field 'sqf', 'mls_number' %><br />
+  
+  <%= 
+  observe_field "sqf_mls_number", 
+    :indicate => [sqf, "row"], # shortcut for dom_id(sqf, "row")
+    :with => "mls_number",
+    :url => "/sqfs/scan_data",
+    :on => "blur"
+    )%>
+  </div>
+  
+  <% indicated_div [sqf, "row"] %>
+    Here's where the mls data will come back when you change the item above
+  <% end %>
+</pre>
