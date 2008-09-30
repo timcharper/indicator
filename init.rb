@@ -2,7 +2,7 @@ require "indicator.rb"
 
 ActionView::Base.send(:include, Indicator::InstanceMethods)
 # install files
-['/public/images'].each{|dir|
+%w[/public/images /public/javascripts /public/stylesheets].each{|dir|
   source = File.join(directory,dir)
   dest = RAILS_ROOT + dir
   FileUtils.cp_r(Dir.glob(source+'/*.*'), dest)
