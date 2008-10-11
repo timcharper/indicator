@@ -5,11 +5,11 @@ class Indicator
     end
     
     def indicate_loading(identifier)
-      "start_indicator('#{indicator_id(identifier)}')"
+      "start_indicator('#{identifier}')"
     end
     
     def indicate_complete(identifier)
-      "stop_indicator('#{indicator_id(identifier)}')"
+      "stop_indicator('#{identifier}')"
     end
   end
 end
