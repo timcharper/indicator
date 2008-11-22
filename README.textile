@@ -9,23 +9,45 @@ This plugin provides you with several helpful methods to quickly enable your aja
 h2. USAGE
 
 <pre>
+  <%= javascript_include_tag "prototype", "indicator" %>
   <%
   sqf = Sqf.find(:first)
   %>
   
   <div>
   <label>MLS #</label><%= text_field 'sqf', 'mls_number' %><br />
-  
   <%= 
-  observe_field "sqf_mls_number", 
-    :indicate => [sqf, "row"], # shortcut for dom_id(sqf, "row")
+  observe_field("sqf_mls_number", 
+    :indicate_and_update => dom_id(sql, "row"),
     :with => "mls_number",
     :url => "/sqfs/scan_data",
     :on => "blur"
     )%>
   </div>
   
-  <% indicated_div [sqf, "row"] %>
+  <div id="<%= dom_id(sql, "row") %>" class="overlay_to_indicate">
     Here's where the mls data will come back when you change the item above
+  </div>
   <% end %>
 </pre>
+
+h2. MORE INFO
+
+h3. remote_function and friends
+
+<code>remote_function</code> (and therefore <code>link_to_remote</code>, <code>remote_form_for</code>, etc.) is extended to support "indicate" and "indicate_and_update" 
+
+<pre>
+  observe_field("sqf_mls_number", 
+    :indicate_ => dom_id(sql, "row"),
+    :with => "mls_number",
+    :url => "/sqfs/scan_data",
+    :on => "blur"
+    )
+</pre>
+
+h3. Target element classes:
+
+If the target div has the class "overlay_to_indicate", it will put a transluscent layer over the element with a spinner on the front.  Additionally, it will disable every form field in the element (and reenable only the ones that were disabled when done).
+
+Otherwise, the default behavior is to hide the element, and show it again when done.
