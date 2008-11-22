@@ -1,9 +1,5 @@
 class Indicator
   module InstanceMethods
-    def to_dom_id(identifier)
-      Array===identifier ? dom_id(*identifier) : identifier
-    end
-    
     def indicate_loading(identifier)
       "start_indicator('#{identifier}')"
     end
@@ -20,7 +16,6 @@ module ActionView::Helpers::PrototypeHelper
     identifier = indicate || indicate_and_update
     
     if identifier
-      identifier = to_dom_id(identifier)
       options[:update] = identifier if indicate_and_update
       
       for op in [:loading, :complete]
