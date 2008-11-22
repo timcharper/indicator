@@ -20,7 +20,7 @@ function start_indicator(element) {
       element.indicating = false;
       element.indicator_cleanup = null;
     }
-  } else if (element.hasClassName("hide_to_indicate")) {
+  } else {
     element.hide(); element.insert({after: indicator})
     element.indicating = true;
     element.indicator_cleanup = function() { 
